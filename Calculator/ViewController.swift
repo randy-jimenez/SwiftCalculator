@@ -68,9 +68,6 @@ class ViewController: UIViewController {
             let op = stack[1]
             let right = Double(stack[2])!
             
-            print(left)
-            print(op)
-            print(right)
             switch(op) {
             case "÷":
                 left /= right
