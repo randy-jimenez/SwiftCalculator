@@ -19,7 +19,6 @@ extension String {
 }
 
 class ViewController: UIViewController {
-    let operators: [String] = ["÷", "x", "-", "+", "="]
     var result: Double = 0 {
         didSet {
             if result == floor(result) {
@@ -40,56 +39,35 @@ class ViewController: UIViewController {
         updateUI()
     }
 
-    @IBAction func buttonWasPressed(_ sender: UIButton) {
+    @IBAction func digitOrDecimalPressed(_ sender: UIButton) {
         var buttonPressed = sender.currentTitle!
 
-        if buttonPressed.isInt() || buttonPressed == "." {
-            if let topOfStack = stack.popLast() {
-                if topOfStack.isDouble() {
-                    buttonPressed = topOfStack + buttonPressed
-                }
-                else {
-                    stack.append(topOfStack)
-                }
+        if let topOfStack = stack.popLast() {
+            if topOfStack.isDouble() {
+                buttonPressed = topOfStack + buttonPressed
             }
-            stack.append(buttonPressed)
-        } else if buttonPressed == "C" {
-            stack = ["0"]
-        } else if buttonPressed == "+/-" {
-            if var topOfStack = stack.popLast() {
-                if topOfStack.isDouble() && Double(topOfStack) != 0 {
-                    if topOfStack.starts(with: "-") {
-                        topOfStack = String(topOfStack.dropFirst())
-                    } else {
-                        topOfStack = "-" + topOfStack
-                    }
-                    stack.append(topOfStack)
-                }
+            else {
+                stack.append(topOfStack)
             }
-        } else if operators.contains(buttonPressed) {
-            if let topOfStack = stack.popLast() {
-                if !operators.contains(topOfStack) {
-                    stack.append(topOfStack)
-                }
-            }
-            evaluateStack()
-            if buttonPressed != "=" {
-                updateUI()
-                stack.append(buttonPressed)
-            }
-        } else {
-            stack.append(buttonPressed)
         }
-
+        stack.append(buttonPressed)
         updateUI()
     }
 
-    func evaluateStack() {
+    @IBAction func operatorPressed(_ sender: UIButton) {
+        let buttonPressed = sender.currentTitle!
+        
+        if let topOfStack = stack.popLast() {
+            if !["÷", "x", "-", "+", "="].contains(topOfStack) {
+                stack.append(topOfStack)
+            }
+        }
+
         if stack.count == 3 {
             var left = Double(stack[0])!
             let op = stack[1]
             let right = Double(stack[2])!
-
+            
             print(left)
             print(op)
             print(right)
@@ -105,11 +83,34 @@ class ViewController: UIViewController {
             }
             stack = [String(left)]
         }
+
+        updateUI()
+        if buttonPressed != "=" {
+            stack.append(buttonPressed)
+        }
+    }
+
+    @IBAction func clearPressed(_ sender: UIButton) {
+        stack = ["0"]
+        updateUI()
+    }
+    
+    @IBAction func negatePressed(_ sender: UIButton) {
+        if var topOfStack = stack.popLast() {
+            if topOfStack.isDouble() && Double(topOfStack) != 0 {
+                if topOfStack.starts(with: "-") {
+                    topOfStack = String(topOfStack.dropFirst())
+                } else {
+                    topOfStack = "-" + topOfStack
+                }
+                stack.append(topOfStack)
+            }
+        }
+        updateUI()
     }
 
     func updateUI() {
         if let topOfStack = stack.last {
-            print(topOfStack)
             if topOfStack.isDouble() {
                 result = Double(topOfStack)!
             }
