@@ -106,6 +106,15 @@ class ViewController: UIViewController {
         updateUI()
     }
 
+    @IBAction func percentPressed(_ sender: UIButton) {
+        if let topOfStack = stack.popLast() {
+            if topOfStack.isDouble() && Double(topOfStack) != 0 {
+                stack.append(String(Double(topOfStack)! / 100))
+            }
+        }
+        updateUI()
+    }
+
     func updateUI() {
         if let topOfStack = stack.last {
             if topOfStack.isDouble() {
