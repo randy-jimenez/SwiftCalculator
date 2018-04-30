@@ -89,6 +89,7 @@ class ViewController: UIViewController {
         }
 
         updateUI()
+
         if buttonPressed != "=" {
             stack.append(buttonPressed)
         }
