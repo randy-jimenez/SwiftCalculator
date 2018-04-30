@@ -10,7 +10,7 @@ import UIKit
 
 extension String {
     func isInt() -> Bool {
-        return Int(self) != nil
+        return isDouble() && Double(self)!.isInt()
     }
 
     func isDouble() -> Bool {
@@ -18,10 +18,17 @@ extension String {
     }
 }
 
+extension Double
+{
+    func isInt() -> Bool {
+        return self == floor(self)
+    }
+}
+
 class ViewController: UIViewController {
     var result: Double = 0 {
         didSet {
-            if result == floor(result) {
+            if result.isInt()  {
                 resultDisplay.text  = String(Int(result))
             } else {
                 resultDisplay.text = String(result)
